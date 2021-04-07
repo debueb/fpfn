@@ -1,0 +1,11 @@
+.marker_icon {
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100%;
+    padding-top: 1.5em;
+    width: 2em;
+    min-width: 2em;
+    height: 2em;
+    display: inline-block;
+    text-align: center;
+}

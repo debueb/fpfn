@@ -1,0 +1,12 @@
+{
+    "name": "FP4N",
+    "action": {},
+    "manifest_version": 3,
+    "version": "0.1",
+    "description": "Visualize P4N places by rating. Warning, this is resource intensive...",
+    "content_scripts": [{
+        "matches": ["https://park4night.com/carte_lieux*"],
+        "css": ["leaflet.css", "content.css"],
+        "js": ["leaflet.js", "content.js"]
+    }]
+  }
