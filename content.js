@@ -79,9 +79,11 @@ let doIt = () => {
 let btn = document.createElement('button');
 btn.onclick = () => { doIt() };
 btn.textContent = 'Fix this shit';
+btn.textContent = 'Show map with rating';
 btn.style.float = 'right';
 btn.style.background = 'red';
 btn.style.color = 'white';
 btn.style.display = 'inline-block';
+btn.className = 'fp4n';
 let content = document.getElementById('content');
 content.insertBefore(btn, content.children[0]);

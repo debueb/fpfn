@@ -6,7 +6,12 @@
     "description": "Visualize P4N places by rating. Warning, this is resource intensive...",
     "content_scripts": [{
         "matches": ["https://park4night.com/carte_lieux*"],
-        "css": ["leaflet.css", "content.css"],
+        "css": ["leaflet.css", "content.css", "fp4n.css"],
         "js": ["leaflet.js", "content.js"]
+    },
+    {
+        "matches": ["https://park4night.com/*page=lieu*"],
+        "css": ["fp4n.css"],
+        "js": ["gmaps-link.js"]
     }]
   }
