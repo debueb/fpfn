@@ -1,9 +1,9 @@
-button.fp4n {
+button.ip4n {
     display: inline-block;
     padding: 3px;
     border-radius: 5px;
 }
 
-button.fp4n:hover {
+button.ip4n:hover {
     cursor: pointer;
 }

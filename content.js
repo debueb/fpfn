@@ -85,6 +85,6 @@ let btn = document.createElement('button');
 btn.onclick = () => { doIt() };
 btn.textContent = 'Show map with rating';
 btn.style.float = 'right';
-btn.className = 'fp4n';
+btn.className = 'ip4n';
 let content = document.getElementById('content');
 content.insertBefore(btn, content.children[0]);
