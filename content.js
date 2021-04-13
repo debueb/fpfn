@@ -35,6 +35,10 @@ let doIt = () => {
     let map = L.map('newMap').setView([lat, lon], zoom);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {'useCache': true}).addTo(map);
 
+    // AbortController to kill requests when user exists view
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     // add close handler
     let closeBtn = document.createElement('button');
     closeBtn.style.position = 'fixed';
@@ -43,6 +47,7 @@ let doIt = () => {
     closeBtn.style.zIndex = '99999';
     closeBtn.textContent = 'X';
     closeBtn.onclick = () => {
+        controller.abort();
         m.style.display = 'none';
         map.off();
         map.remove();
@@ -50,12 +55,12 @@ let doIt = () => {
     m.appendChild(closeBtn);
 
     // get a list of all places
-    fetch(`${baseurl}/services/V3/getLieuxAroundMeLite.php?latitude=${lat}&longitude=${lon}`)
+    fetch(`${baseurl}/services/V3/getLieuxAroundMeLite.php?latitude=${lat}&longitude=${lon}`, { signal })
     .then(response => response.json())
     .then(data => {
         for (let place of data.lieux) {
             // get details for every place
-            fetch(`${baseurl}?page=lieu&id=${place.id}`)
+            fetch(`${baseurl}?page=lieu&id=${place.id}`, { signal })
             .then(response => response.text())
             .then(html => {
                 let parser = new DOMParser();
@@ -78,12 +83,8 @@ let doIt = () => {
 //doIt();
 let btn = document.createElement('button');
 btn.onclick = () => { doIt() };
-btn.textContent = 'Fix this shit';
 btn.textContent = 'Show map with rating';
 btn.style.float = 'right';
-btn.style.background = 'red';
-btn.style.color = 'white';
-btn.style.display = 'inline-block';
 btn.className = 'fp4n';
 let content = document.getElementById('content');
 content.insertBefore(btn, content.children[0]);
