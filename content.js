@@ -23,62 +23,65 @@ let findGetParameter = (parameterName) => {
 };
   
 let doIt = () => {
-    m.style.display = 'block';
-
     // get current coordinates
     let lat = findGetParameter('lat');
     let lon = findGetParameter('lng');
     let zoom = findGetParameter('zoom');
     let baseurl = `${location.protocol}//${location.host}`;
     
-    // create overlay map
-    let map = L.map('newMap').setView([lat, lon], zoom);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {'useCache': true}).addTo(map);
+    if (!!lat) {
+        m.style.display = 'block';
 
-    // AbortController to kill requests when user exists view
-    const controller = new AbortController();
-    const signal = controller.signal;
+        // create overlay map
+        let map = L.map('newMap').setView([lat, lon], zoom);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {'useCache': true}).addTo(map);
 
-    // add close handler
-    let closeBtn = document.createElement('button');
-    closeBtn.style.position = 'fixed';
-    closeBtn.style.top = '10px';
-    closeBtn.style.right = '10px';
-    closeBtn.style.zIndex = '99999';
-    closeBtn.textContent = 'X';
-    closeBtn.onclick = () => {
-        controller.abort();
-        m.style.display = 'none';
-        map.off();
-        map.remove();
-    };
-    m.appendChild(closeBtn);
+        // AbortController to kill requests when user exists view
+        const controller = new AbortController();
+        const signal = controller.signal;
 
-    // get a list of all places
-    fetch(`${baseurl}/services/V3/getLieuxAroundMeLite.php?latitude=${lat}&longitude=${lon}`, { signal })
-    .then(response => response.json())
-    .then(data => {
-        for (let place of data.lieux) {
-            // get details for every place
-            fetch(`${baseurl}?page=lieu&id=${place.id}`, { signal })
-            .then(response => response.text())
-            .then(html => {
-                let parser = new DOMParser();
-                let doc = parser.parseFromString(html, "text/html");
-                let rating = doc.getElementsByClassName('rating_fg')[0].style.width;
-                rating = parseInt(rating.slice(0, rating.length-2), 10); //remove 'px' and round;
-                var markerDiv = L.divIcon({
-                    className: `marker_base`,
-                    html: `<span class="marker_icon" style="background-image: url('/www/resources/images/pins/poi_${place.code.toLowerCase()}.png');">${rating}</span>`,
+        // add close handler
+        let closeBtn = document.createElement('button');
+        closeBtn.style.position = 'fixed';
+        closeBtn.style.top = '10px';
+        closeBtn.style.right = '10px';
+        closeBtn.style.zIndex = '99999';
+        closeBtn.textContent = 'X';
+        closeBtn.onclick = () => {
+            controller.abort();
+            m.style.display = 'none';
+            map.off();
+            map.remove();
+        };
+        m.appendChild(closeBtn);
+
+        // get a list of all places
+        fetch(`${baseurl}/services/V3/getLieuxAroundMeLite.php?latitude=${lat}&longitude=${lon}`, { signal })
+        .then(response => response.json())
+        .then(data => {
+            for (let place of data.lieux) {
+                // get details for every place
+                fetch(`${baseurl}?page=lieu&id=${place.id}`, { signal })
+                .then(response => response.text())
+                .then(html => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(html, "text/html");
+                    let rating = doc.getElementsByClassName('rating_fg')[0].style.width;
+                    rating = parseInt(rating.slice(0, rating.length-2), 10); //remove 'px' and round;
+                    var markerDiv = L.divIcon({
+                        className: `marker_base`,
+                        html: `<span class="marker_icon" style="background-image: url('/www/resources/images/pins/poi_${place.code.toLowerCase()}.png');">${rating}</span>`,
+                    });
+                    let marker = L.marker([place.latitude, place.longitude], {icon: markerDiv}).addTo(map);
+                    marker.on('click', () => {
+                        open(`${baseurl}?page=lieu&id=${place.id}`);
+                    })
                 });
-                let marker = L.marker([place.latitude, place.longitude], {icon: markerDiv}).addTo(map);
-                marker.on('click', () => {
-                    open(`${baseurl}?page=lieu&id=${place.id}`);
-                })
-            });
-        }
-    });
-
+            }
+        });
+    } else {
+        alert('Search for a place first');
+    }
 }
 //doIt();
 let btn = document.createElement('button');
