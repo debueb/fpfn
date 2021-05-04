@@ -83,9 +83,8 @@ let doIt = () => {
         alert('Search for a place first');
     }
 }
-//doIt();
 let btn = document.createElement('button');
-btn.onclick = () => { doIt() };
+btn.onclick = doIt;
 btn.textContent = 'Show map with rating';
 btn.style.float = 'right';
 btn.className = 'ip4n';
