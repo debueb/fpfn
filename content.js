@@ -26,7 +26,7 @@ let doIt = () => {
     // get current coordinates
     let lat = findGetParameter('lat');
     let lon = findGetParameter('lng');
-    let zoom = findGetParameter('zoom');
+    let zoom = findGetParameter('z');
     let baseurl = `${location.protocol}//${location.host}`;
     
     if (!!lat) {
@@ -55,28 +55,18 @@ let doIt = () => {
         };
         m.appendChild(closeBtn);
 
-        // get a list of all places
-        fetch(`${baseurl}/services/V3/getLieuxAroundMeLite.php?latitude=${lat}&longitude=${lon}`, { signal })
+        fetch(`${baseurl}/api/places/around?lat=${lat}&lng=${lon}&radius=200&filter={}&lang=en`, { signal })
         .then(response => response.json())
         .then(data => {
-            for (let place of data.lieux) {
-                // get details for every place
-                fetch(`${baseurl}?page=lieu&id=${place.id}`, { signal })
-                .then(response => response.text())
-                .then(html => {
-                    let parser = new DOMParser();
-                    let doc = parser.parseFromString(html, "text/html");
-                    let rating = doc.getElementsByClassName('rating_fg')[0].style.width;
-                    rating = parseInt(rating.slice(0, rating.length-2), 10); //remove 'px' and round;
-                    var markerDiv = L.divIcon({
-                        className: `marker_base`,
-                        html: `<span class="marker_icon" style="background-image: url('/www/resources/images/pins/poi_${place.code.toLowerCase()}.png');">${rating}</span>`,
-                    });
-                    let marker = L.marker([place.latitude, place.longitude], {icon: markerDiv}).addTo(map);
-                    marker.on('click', () => {
-                        open(`${baseurl}?page=lieu&id=${place.id}`);
-                    })
+            for (let place of data) {
+                let markerDiv = L.divIcon({
+                    className: `marker_base`,
+                    html: `<span class="marker_icon" style="background-image: url('/images/bitmap/icons/pins/pins_${place.type.code.toLowerCase()}@4x.png');">${place.rating}</span>`,
                 });
+                let marker = L.marker([place.lat, place.lng], {icon: markerDiv}).addTo(map);
+                marker.on('click', () => {
+                    open(`${baseurl}/en/place/${place.id}`);
+                })
             }
         });
     } else {
@@ -88,5 +78,6 @@ btn.onclick = doIt;
 btn.textContent = 'Show map with rating';
 btn.style.float = 'right';
 btn.className = 'ip4n';
-let content = document.getElementById('content');
+let content = document.getElementsByClassName('container').item(3);
+content.children[0].style.clear='both';
 content.insertBefore(btn, content.children[0]);
