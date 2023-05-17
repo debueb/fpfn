@@ -61,7 +61,7 @@ let doIt = () => {
             for (let place of data) {
                 let markerDiv = L.divIcon({
                     className: `marker_base`,
-                    html: `<span class="marker_icon" style="background-image: url('/images/bitmap/icons/pins/pins_${place.type.code.toLowerCase()}@4x.png');">${place.rating}</span>`,
+                    html: `<span class="marker_icon" style="background-image: url('/images/bitmap/icons/pins/pins_${place.type.code.toLowerCase()}@4x.png');"><div class="rating-text">${place.rating}</div></span>`,
                 });
                 let marker = L.marker([place.lat, place.lng], {icon: markerDiv}).addTo(map);
                 marker.on('click', () => {
