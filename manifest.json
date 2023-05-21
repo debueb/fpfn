@@ -15,7 +15,7 @@
         "js": ["leaflet.js", "content.js"]
     },
     {
-        "matches": ["https://park4night.com/*page=lieu*"],
+        "matches": ["https://park4night.com/en/place*"],
         "css": ["ip4n.css"],
         "js": ["gmaps-link.js"]
     }]
