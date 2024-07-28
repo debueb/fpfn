@@ -22,11 +22,8 @@ let findGetParameter = (parameterName) => {
     return result;
 };
   
-let doIt = () => {
-    // get current coordinates
-    let lat = findGetParameter('lat');
-    let lon = findGetParameter('lng');
-    let zoom = findGetParameter('z');
+let showFullMap = (lat, lon, zoom) => {
+    
     let baseurl = `${location.protocol}//${location.host}`;
     
     if (!!lat) {
@@ -55,6 +52,25 @@ let doIt = () => {
         };
         m.appendChild(closeBtn);
 
+        // add search here handler
+        let searchBtn = document.createElement('button');
+        searchBtn.style.position = 'fixed';
+        searchBtn.style.top = '10px';
+        searchBtn.style.right = '40px';
+        searchBtn.style.zIndex = '99999';
+        searchBtn.textContent = 'Search here';
+        searchBtn.onclick = () => {
+            controller.abort();
+            let latLng = map.getCenter();
+            let zoom = map.getZoom();
+            m.style.display = 'none';
+            map.off();
+            map.remove();
+            showFullMap(latLng.lat, latLng.lng, zoom);
+        };
+        m.appendChild(searchBtn);
+
+
         fetch(`${baseurl}/api/places/around?lat=${lat}&lng=${lon}&radius=200&filter={}&lang=en`, { signal })
         .then(response => response.json())
         .then(data => {
@@ -74,7 +90,11 @@ let doIt = () => {
     }
 }
 let btn = document.createElement('button');
-btn.onclick = doIt;
+// get current coordinates
+let lat = findGetParameter('lat');
+let lon = findGetParameter('lng');
+let zoom = findGetParameter('z');
+btn.onclick = () => showFullMap(lat, lon, zoom);
 btn.textContent = 'Show map with rating';
 btn.style.float = 'right';
 btn.className = 'ip4n';
