@@ -10,12 +10,12 @@
         "128": "icon128.png" 
     },
     "content_scripts": [{
-        "matches": ["https://park4night.com/en/search*"],
+        "matches": ["https://park4night.com/*/search*"],
         "css": ["leaflet.css", "content.css", "ip4n.css"],
         "js": ["leaflet.js", "content.js"]
     },
     {
-        "matches": ["https://park4night.com/en/place*"],
+        "matches": ["https://park4night.com/*/place*"],
         "css": ["ip4n.css"],
         "js": ["gmaps-link.js"]
     }]
