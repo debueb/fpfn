@@ -13,3 +13,20 @@
 .rating-text{
     background: #fff;
 }
+
+.control-bar{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 99999;
+    background: #FFF;
+    width: 100px;
+    height: 100vh;
+    padding: 5px;
+}
+
+label {
+    vertical-align: middle;;
+}
